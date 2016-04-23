@@ -2,17 +2,15 @@
 title: 'Chen Yanlong'
 description: '只为发现更大的世界,只为遇见更美的自己.<br/>认真 你就赢了'
 url: ''
-baseurl: ''
+baseurl: '/'
 # google_analytics: 'UA-XXXXXX-X'
 # disqus_shortname: 'your-disqus-name'
 
 author:
-  name: 'Josh Gerdes'
-  email: josh@joshgerdes.com
-  twitter_username: joshgerdes
-  facebook_username: joshgerdes
-  github_username:  joshgerdes
-  linkedin_username:  joshgerdes
+  name: 'Chen Yanlong'
+  email: 15636039213@163.com
+  github_username:  CYanLong
+  linkedin_username:  艳龙-陈-847441118
 
 defaults:
   -

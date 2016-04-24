@@ -3,7 +3,7 @@ title: "写在前面--正在走的路"
 data: "2016-4-24"
 tags: [正在走的路]
 ---
-&emsp;&emsp;折腾了两天时间，终于有了一个可以写字的地方。本博客 fork 自 [Jekyllthemes](http://jekyllthemes.org/) 社区的免费主题 [Jekyll-Uno](http://jekyllthemes.org/themes/jekyll-uno/) 。感谢！
+&emsp;&emsp;折腾了两天，终于有了一个可以写字的地方。本博客 fork 自 [Jekyllthemes](http://jekyllthemes.org/) 社区的免费主题 [Jekyll-Uno](http://jekyllthemes.org/themes/jekyll-uno/) 。感谢！
 
 &emsp;&emsp;来到黑大就要两年了，很喜欢现在大学的学习生活状态。在这里我见到了很多优秀的人，自己也成长了很多。有了自己独立的人格，三观也基本建立。更重要的是，拥有了和自己独处的能力，找到了自己真正喜欢的,可以作为事业用一生去做的东西。这些都使我的整个人生有了意义。
 
@@ -11,7 +11,7 @@ tags: [正在走的路]
 
 &emsp;&emsp;明年大三这个时候就要出去实习了，真正在校的成长时间也就剩下一年了。在技术上希望可以有所增进，突破瓶颈。也希望可以改变一些性格上的不足。
 
-&emsp;&emsp;生而为人，不厌其繁。只为成为一个优秀的人，一个很厉害 很厉害 很厉害 很厉害的人。
+&emsp;&emsp;生而为人，不厌其繁。努力成为一个优秀的人，一个很厉害 很厉害 很厉害 很厉害的人。
 
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;**陈艳龙**
 

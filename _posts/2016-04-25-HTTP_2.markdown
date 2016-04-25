@@ -9,11 +9,12 @@ tags: [HTTP]
 <img src="http://7xtdq2.com1.z0.glb.clouddn.com/http_2_1.PNG">
 
 ##MIME.媒体类型.
+
 &emsp;&emsp;因特网上有数千种不同的数据类型，HTTP仔细地给每种要通过Web传输的对象都打上了名为MIME类型的数据格式标签。最初设计MIME(Multipurpose Internet Mail Extension,多用途因特网邮件扩展)是为了解决在不同的电子邮件系统之间搬移报文时存在的问题。MIME在电子邮件系统中工作的非常好，因此HTTP也采用了它，用来描述并标记多媒体内容。
 
 &emsp;&emsp;Web服务器会为所有的HTTP对象数据附加一个MIME类型。当Web浏览器从服务器中取回一个数据对象时，会去查看相关的MIME类型，看看自己能否知道应该如何处理这个对象。大多数浏览器都可以处理数百种常见的媒体数据类型，如显示图片，解析HTML等。首部字段Content-Type正式说明了体的MIME类型的实体首部字段。
 
-MIME类型由一个主媒体类型(比如:text,image,audio等)后面跟一条斜线以及一个子类型组成，子类型用于进一步描述媒体类型。
+&emsp;&emsp;MIME类型由一个主媒体类型(比如:text,image,audio等)后面跟一条斜线以及一个子类型组成，子类型用于进一步描述媒体类型。
 
 &emsp;常见的媒体格式如下:
 	
@@ -127,6 +128,7 @@ MIME类型由一个主媒体类型(比如:text,image,audio等)后面跟一条斜
 	
 	
 ###总结:
+
 &emsp;&emsp;本片文章主要介绍了一个非常重要且常用的实体首部字段:Content-Type。大致上，Content-Type就是用来说明对应的HTTP报文请求实体的媒体内容。
 
 

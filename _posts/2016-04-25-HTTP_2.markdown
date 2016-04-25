@@ -1,8 +1,9 @@
 ---
-title:Content-Type实体首部字段.
-data: 2016-04-25
+title: "Content-Type实体首部字段"
+data: "2016-04-25"
 tags: [HTTP]
 ---
+
 &emsp;&emsp;现代互联网下，每天都会有数以亿计的各种媒体对象经由HTTP传输，如图像，文本，影视以及软件程序等。这些数据都包含在HTTP报文的实体内容中，如果把HTTP报文想像成一份快递，HTTP实体就是快递实际的货物，而首部字段只是贴在快递上用来描述货物的信息。HTTP必须确保它的报文实体被正确识别，提取以及适当处理。为了实现报文实体能被正确的识别，HTTP提供了Content-Type实体首部字段来描述报文实体的媒体格式。
 
 <img src="http://7xtdq2.com1.z0.glb.clouddn.com/http_2_1.PNG">

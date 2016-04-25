@@ -37,11 +37,11 @@ MIME类型由一个主媒体类型(比如:text,image,audio等)后面跟一条斜
 
 &emsp;form 表单提供了三种编码格式:
 
-> application/x-www-form-urlencoded (默认)
+&emsp;&emsp;&emsp;**1.application/x-www-form-urlencoded (默认)**
 
-> multipart/form-data
+&emsp;&emsp;&emsp;**2.multipart/form-data**
 
-> text/plain 不可靠的方式，实际中不会使用。
+&emsp;&emsp;&emsp;**3.text/plain 不可靠的方式，实际中不会使用。**
 
 &emsp;下面是一个包含file上传的表单。
 

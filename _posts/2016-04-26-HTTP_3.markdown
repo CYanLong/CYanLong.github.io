@@ -1,5 +1,5 @@
 ---
-title: "浏览器缓存"
+title: "浏览器缓存--1"
 data: "2016-04-26"
 tag: [HTTP]
 ---
@@ -38,16 +38,16 @@ tag: [HTTP]
 
 &emsp;&emsp;这是一个很棒的系统。缓存并不一定要为每条请求验证文档的有效性-只有在文档过期时它才需要与服务器进行在验证。
 
-**HTTP提供的 条件请求 缓存再验证：**
-
+&emsp;HTTP提供的 条件请求 缓存再验证：
+---------------------
 &emsp;&emsp;HTTP的条件方法可以很高效的实现再验证。HTTP允许缓存向原始服务器发送一个“条件GET”，请求服务器只有在源资源与缓存中的副本资源不同时，才响应此请求返回新的资源，否则，直接返回一个不包含实体数据的 304 Modified 状态码报文以告知即使这份文件"过期了"，但内容并没有发生变化，可以继续使用缓存。
 
 &emsp;&emsp;通过这种方式，将验证和对象获取结合成了单个添加GET。向GET请求报文中添加一些特殊的条件首部，就可以发起条件GET。只有条件为真时，Web服务器才会返回实体数据。
 
 &emsp;&emsp;HTTP定义了5个条件请求首部。对缓存再验证来说最有用的2个首部是If-Modified-Since和If-None-Match。所有的条件首部都以前缀 “If-”开头。
 
-**1:If-Modified-Since:<data> 。**
-
+&emsp;1:If-Modified-Since:<data>
+----------------------------
 &emsp;&emsp;在进行缓存再验证时，"条件GET"会有一条 If-Modified-Since 的首部字段，其值一般为上一次请求此资源时得到的 Last-Modified 的值。
 	
 	If-Modified-Since: Tue, 26 Apr 2016 13:22:25 GMT
@@ -56,8 +56,8 @@ tag: [HTTP]
 
 &emsp;&emsp;如果自指定日期后，文档被修改了，If-Modified-Since 条件就为真，则GET就会成功执行。携带新首部的新文档会被返回给缓存。如果比对发现文档没有被修改过，条件就为假，会向客户端返回一个小的不包含响应实体的 304 Not Modified 响应报文。
 
-**2:If-None-Modified:<ETag>**
-
+&emsp;2:If-None-Modified:<ETag>
+--------------------------
 
 &emsp;&emsp;然而，有些情况下仅使用最后修改日期进行再验证是不够的。有些服务器提供的文档会在亚秒间隙发生变化，而使用Last-Modified-Since只是以秒为最小粒度的。为了解决这个问题，HTTP引入了实体标签再验证。
 
@@ -81,3 +81,5 @@ tag: [HTTP]
 &emsp;&emsp;1.首先查看浏览器有没有此资源的缓存，如果没有，请求服务器。如果有，根据Expires和Cache-Control:max-age 判断此缓存有没有过期，如果没有过期，直接使用，完全不走服务器。如果已过期，进行服务器的再验证。
 
 &emsp;&emsp;2.第一步中当根据Expires和Cache-Control:max-age 得知资源确实过期后，浏览器会带者 If-Last-Modified 和 If-None-Modified 进入服务器进行再验证。如果两者条件都满足，说明缓存的资源即使过期了但还是“新鲜的”，直接返回304。反之，接收请求并返回新的资源。
+
+

@@ -25,7 +25,7 @@ destination: _site
 paginate: 10
 permalink: pretty
 markdown: kramdown
-highlighter: rouge
+highlighter: 
 
 kramdown:
   # use Github Flavored Markdown

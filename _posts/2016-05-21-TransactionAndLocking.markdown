@@ -1,7 +1,7 @@
 ---
 title: "事务和锁"
 date: "2016-05-21"
-tags:[MySQL]
+tag: [MySQL]
 ---
 
 事务(Transaction)和锁机制(locking)是数据库区别于文件系统的重要特性之一，也是确保数据一致性最重要的保护机制。

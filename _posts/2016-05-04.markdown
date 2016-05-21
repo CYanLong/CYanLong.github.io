@@ -10,7 +10,11 @@ tags: [projects]
 
 项目名叫做OcNote,是一款网页端的 日程或笔记 记录软件，类似于印象笔记。
 
+<img src="http://7xtdq2.com1.z0.glb.clouddn.com/ocnote_2.PNG">
 
+<img src="http://7xtdq2.com1.z0.glb.clouddn.com/ocnote_1.PNG">
+
+<img src="http://7xtdq2.com1.z0.glb.clouddn.com/ocnote_3.PNG">
 
 &emsp;&emsp;首先，大概谈谈这个项目用到的技术吧。
 

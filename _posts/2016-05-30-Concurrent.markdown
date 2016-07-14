@@ -1,7 +1,7 @@
 ---
-title:"ConcurrentHashMap"
-data:"2016-05-30"
-tags:[concurrent]
+title: "ConcurrentHashMap"
+data: "2016-05-30"
+tags: [concurrent]
 ---
 
 Java平台类库包含了丰富的并发基础构建模块，例如线程安全的容器类以及各种用于协调多个相互协作的线程控制流的同步工具类(Synchronizer)。

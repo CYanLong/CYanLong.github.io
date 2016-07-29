@@ -1195,7 +1195,8 @@ hr {
 	margin: 0 0 5px 0;
 	font-size: 2.5em;
 	letter-spacing: 4px;
-	color: #FFF; }
+	color: #FFF;
+	font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
 
 .panel-subtitle {
 	font-family: "Roboto Slab", serif;
@@ -1275,7 +1276,7 @@ hr {
 	font-weight: 100;
 	text-align: center;
 	color: #555555;
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4); }
+	/*text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);*/ }
 	.panel-inverted a {
 		color: #FFF; }
 

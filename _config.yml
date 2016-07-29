@@ -1,14 +1,14 @@
 # Site settings
-title: 'Chen Yanlong'
-description: '我希望活得深刻,汲取生命所有的精髓! 把非生命的一切全都击溃<br/>以免在我生命终结时,发现自己从来没有活过'
+title: 'Yanlong'
+description: 'python & Java developer'
 url: ''
 baseurl: '/'
 # google_analytics: 'UA-XXXXXX-X'
 # disqus_shortname: 'your-disqus-name'
 
 author:
-  name: 'Chen Yanlong'
-  email: 15636039213@163.com
+  name: 'Yanlong'
+  email: cyanlong@outlook.com
   github_username:  CYanLong
   linkedin_username:  艳龙-陈-847441118
 

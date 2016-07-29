@@ -10,7 +10,7 @@ pre.highlight,
 
 pre.highlight code,
 .highlight pre code {
-  white-space: pre-wrap;
+  overflow:scroll;
 }
 
 .btn, 

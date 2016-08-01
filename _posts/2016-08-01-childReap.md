@@ -1,7 +1,7 @@
 ---
 title: "进程的回收"
 data: "2016-08-01"
-tag： [linux]
+tags： [linux]
 ---
 
 ---

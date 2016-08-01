@@ -17,7 +17,7 @@ tags: [linux]
 一个进程为每个程序提供它自己的私有地址空间。一般情况下，进程是无法访问到其他进程的地址空间的。
 下面是一个进程地址空间的分布图：
 
-<img href="http://7xtdq2.com1.z0.glb.clouddn.com/process.png"/>
+![](http://7xtdq2.com1.z0.glb.clouddn.com/process.png)
 
 我们看到：每个进程都有自己的 `运行时堆`, `栈`，`代码和数据段(.data, .txt..)`。
 

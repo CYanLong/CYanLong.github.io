@@ -5,7 +5,7 @@
 
 pre.highlight,
 .highlight pre {
-  padding: 10px;
+  padding: 10px;overflow-x: scroll;
 }
 
 pre.highlight code,

@@ -1,0 +1,192 @@
+---
+title: "JVM字节码格式"
+date: "2016-08-28"
+tags: [jvm]
+---
+
+---
+Java虚拟机不和包括Java在内的任何语言绑定，它只与 “Class 文件” 这种特定的二进制文件格式所关联。
+
+任何一个Class文件都对应着唯一一个类或接口的定义信息。
+
+Class文件是一组以8位字节为基础单位的二进制流。各个数据项目严格按照顺序紧凑地排列在Class文件之中，中间没有添加任何分隔符。
+
+由于Class字节码存储的都是二进制数，不便于分析。所以我们需将其转化为对应的 类汇编 指令进行分析。 `javap -verbose 类名` 命令可以将二进制的Class转化为对应的类汇编指令。
+
+---
+<h4>重要的有关程序代码的数据结构</h4>
+---
+
+我们写的程序，如类，方法，字段等主要存放在 Class文件的 `常量池`，`字段表`， `方法表`， `属性表集合` 中。 
+
+在这里，举一个简单的例子：
+	
+	//Test1.java
+	public class Test1{
+		final static int I = 1;
+		
+		public void inc(int j){
+			int k = j + I;
+		} 
+	}
+
+---
+<h4>一.常量池</h4>
+---
+
+常量池是由拥有不同的数据类型的的表组成的，主要三种常量： 存储字符串的表，表示字面量的表，和符号引用。
+
+1.存储字符串的表： `类的全限定名`，`字段名`，`字段的描述`，`方法`，`方法的描述`，Class文件中的 `属性表名称` 等 信息最终都要以字符串的形式来体现。 这个类型的常量用来被常量池中的`符号引用`，`字段表`，`方法表`，`属性表` 所引用。
+
+下面是示例代码的Class文件中常量池的 `CONSTANT_Utf8_info` 类型的表：
+
+	Constant Pool: (CONSTANT_Utf8_info) 
+	  
+	  #2 = Utf8    com/cyl/jvm/bytecode/Test1  #类的全限定名
+	  #4 = utf8    java/lang/Object  #类的全限定名
+	  #5 = Utf8    I   #字段名称
+	  #6 = Utf8    ConstantValue  #ConstantValue是字段表的属性表
+	  #8 = Utf8	   <init> #方法名称，代表实例构造方法
+	  #9 = Utf8    ()V   #方法的描述信息
+	  #10 = Utf8   Code  #Code属性表名称. Code属性表包含在方法表中。存储方法体的指令内容
+	  #13 = Utf8   LineNumberTable    #行号信息表也是Code的一个属性表
+	  #14 = Utf8   LocalVariableTable  #本地变量表是Code的一个属性表
+	  #15 = Utf8   this  #变量的名称
+	  #16 = Utf8   Lcom/cyl/jvm/bytecode/Test1;  #
+	  #17 = Utf8   inc   #方法的名称
+	  #18 = Utf8   (I)V  #方法的描述信息。 表示接收一个int型参数，返回void
+	  #19 = Utf8   j  #变量名称
+	  #20 = Utf8   k #变量名称
+	  #21 = Utf8   SourceFile  #属性表名称
+	  #22 = Utf8   Test1.java
+
+2.字面量比较接近Java语言层面的常量概念，如字符串，声明为 final 类型的常量值等。
+	
+	Constant Pool:
+	  #7 = Integer  1
+
+`CONSTANT_Integer_info` 表的结构如下:
+	
+	项目			类型			描述
+	tag: 		u1			值为3
+	bytes: 		u4			按照高位在前存储的int值
+
+我们可以看到，被 `static final` 修饰的字段的初始值直接存储在Class文件常量池中。
+
+3.符号引用包括了下面三类常量：
+	
+	1.类或接口的全限定名(Fully Qualified Name)
+	2.字段的名称和描述符
+	3.方法的名称和描述符
+
+**&emsp;&emsp;注：java代码在进行 `javac` 编译时，并不像 C 和 C++ 那样有“连接”这一步，而是在虚拟机加载Class文件时进行动态连接。也就是说，在Class文件中不会保存各个方法，字段的最终内存布局信息，当虚拟机运行时，需要从常量池获取对应的符号引用，再在类创建时或运行时解析，翻译到具体的内存地址中。**
+	
+	 #11 = Methodref          #3.#12         // java/lang/Object."<init>":()V
+  	 #12 = NameAndType        #8:#9          // "<init>":()V
+
+下面是 `CONSTANT_Methodref_info` 和 `CONSTANT_NameAndType_info` 表的结构。
+
+	CONSTANT_Methodref_info:
+	项目 			类型			描述
+	tag				u1			值为9
+	index			u2			指向声明方法的类描述符CONSTANT_Class_info的索引
+	index			u2			指向包含方法名称和描述信息的NameAndType_info类型的索引
+
+	CONSTANT_NameAndType_info:
+	项目				类型			描述
+	tag				u1			值为12
+	index			u2			指向Utf8_info，方法名称
+	index			u2			指向Utf8_info，方法描述符
+
+我们看到，常量池中的方法引用包含着一个方法的：`所属类(声明)`，`方法名称`， `方法返回值和参数类型`。**注意：这里并没有方法的修饰符信息(访问权限等信息)。**
+
+到这里，常量池就结束了。总的来说，常量池中包含着一项项的表(info)，每一个表代表不同的类型。针对方法，会有方法符号引用表，字段会有字段符号引用表，常量 (static final) 会有常量 (字面量) 表。
+
+<h4>二.字段表</h4>
+	
+字段表用来描述接口或类中声明的变量。**字段包括类级变量及实例级变量，但不包括在方法内部声明的局部变量。**
+
+如下所示，我们可以从字段表中得到字段名，字段描述符，字段的访问权限，和一些其他信息(如：常量内容)。
+
+	static final int I;
+	descriptor: I
+	flags: ACC_STATIC, ACC_FINAL
+	ConstantValue: int 1
+
+下面是字段表的结构：
+	
+	access_flags		u2		用标志位表示的修饰符
+	name_index			u2		字段的简单名称,指向常量池的Utf8_info表
+	descriptor_index 	u2		字段的描述符，指向常量池的Utf8_info表
+	attributes_count	u2		字段表后面可以跟属性表,属性表的个数.
+	attribute_info		..		若干个属性表信息.
+
+在这里，由于 `I` 被声明为常量，所以会有一个ConstantValue类型的属性表。当一个字段有ConstantValue属性时，这个类变量会在 `准备阶段` 被初始赋值。
+
+<h5>三.方法表</h5>
+&emsp;&emsp;Class文件中对方法的描述与对字段的描述几乎采用了完全一致的方法。依次包含了:`访问标志(access_flags)`，`名称索引(name_index)`， `描述符索引(descriptor_index)	`，`属性表集合(attributes)`。 
+
+&emsp;&emsp;在上面的例子中，共有2个方法表。一个是我们定义的 `void inc(int)` 方法，一个是 `<init>` 方法。如果父类方法在子类中没有被重写(Override)，方法表集合中就不会出现来自父类的方法信息。但会有编译器自动添加的方法，最典型的便是类构造器 `<clinit>` 方法和实例构造器 `<init>` 方法。
+
+	
+	public com.cyl.jvm.bytecode.Test1();
+  	descriptor: ()V
+  	flags: ACC_PUBLIC
+  	Code:
+	    stack=1, locals=1, args_size=1
+	       0: aload_0
+	       1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+	       4: return
+	    LineNumberTable:
+	      line 3: 0
+	    LocalVariableTable:
+	      Start  Length  Slot  Name   Signature
+	          0       5     0  this   Lcom/cyl/jvm/bytecode/Test1;
+
+&emsp;上面是 `<init>` 方法表，我们重点来看 `Code` 集合表.Java 程序方法体中的代码经过 `Javac` 编译处理后，最终变成字节码指令存储在 Code 属性内。 `Code` 属性出现在方法表的属性集合之中，但并非所有的方法都有Code属性表，譬如接口或抽象类中的方法就不存在Code属性。
+
+<h4>四.Code属性表</h4>
+
+Code属性表包含了一个方法的 `max_statck`， `max_locals`，`code`，`exception_table`，`LineNumberTable`，`LocalVariableTable`  等信息。
+
+1.`max_stack`：代表了此方法的操作数栈(Operand Stacks) 深度的最大值。
+
+2.`max_locals`：代表了局部变量表所需的内存空间。在这里，`max_locals` 的单位是 `Slot`。 `Slot` 是虚拟机为局部变量分配内存所使用的最小单位。 `方法参数` （包括实例方法中的隐藏参数 "this"），`显示异常处理器的参数`（Exception Handler Parameter，就是 try-catch 语句中 catch 块所定义的异常），`方法体中定义的局部变量` 都需要使用局部变量表来存放。另外，局部变量表的 Slot 可以被重用。
+
+3.`code`：用来存储Java源程序编译后生成的字节码指令。既然叫字节码指令，那么每个指令就是一个u1类型的单字节，当虚拟机读取到code中的一个字节时，就可以对应找出这个字节码代表的是什么指令，并且可以知道这条指令后面是否需要跟随参数，以及参数应当如何理解。
+
+我们来分析一下上面 <init> 方法的3条指令：
+	
+	aload_0: 将局部变量表中第一个reference类型的变量加载到操作数栈顶。在这里为this。
+	
+	invokespecial: 这条指令以栈顶的reference类型的数据所指向的对象作为方法接收者，
+	调用此对象的实例构造方法，private方法或者它的父类的方法。
+	这个方法有一个u2类型的参数说明具体调用哪一个方法，它指向常量池的一个
+	CONSTANT_Methodref_info类型常量，即此方法的方法符号引用。在这里是<init>方法。
+
+	return: 返回此方法，并且返回值为void。当前方法结束。
+
+
+在 `Code`属性表中，一般都会包含另外两项属性表： `LineNumberTable` 和 `LocalVariableTable`。
+
+
+4.`LineNumberTable` 用于描述 Java源码行号 与 字节码行号（字节码偏移量）之间的对应关系。
+	
+	LineNumberTable:
+        line 3: 0  
+		标识.java文件中第三行的操作对应于字节码偏移量0的位置。
+
+
+当然，它并不是运行时必须的属性，默认会生成到Class文件中，`javac` 的 `-g:none` 或 `-g:lines` 选项用来取消或要求生成这项信息。当取消生成时，对程序运行最大的影响是当抛出异常时，无法显示出行号信息。
+
+5.`LocalVariableTable` 属性用于描述栈帧中局部变量表中的变量 与 Java 源码中定义的变量之间的关系。我们需要的是，在运行时并不需要局部变量的名字，也不会有字段解析等步骤。我们的局部变量的编译时就已经分配好了Slot位置。所以，这项表也不是必要的，对程序最大的影响是当使用IDE引入方法时，会丢失形参的名称，
+会使用诸如 `arg0`， `arg1` 之类的占位符代替。
+
+	LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lcom/cyl/jvm/bytecode/TestClass;
+
+
+
+最后：总的来说，我们在Java源代码中会定义两种数据：字段 和 方法。（这才是程序最主要的数据，类只是组织这两种数据的一种抽象结构，在真正运行时，并不会有特定的关于类的结构）。字段信息会被编译到字段表中，方法会被编译到方法表中。而常量池包括着一些基础的信息被其他表所引用。
+

@@ -1,7 +1,7 @@
 ---
-title: "进程内存管理"
+title: "进程虚拟内存管理"
 data: "2016-09-28"
-tags： ["linux"]
+tags: ["linux"]
 ---
 
 ---

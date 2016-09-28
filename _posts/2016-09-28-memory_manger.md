@@ -5,7 +5,6 @@ tags: ["linux"]
 ---
 
 ---
-
 我们知道, 进程有自己独立的虚拟地址空间, 在 64-bit linux 系统下，理论上最大寻址空间达到了 2^64。一个程序执行的并不是随便使用这么大的空间，而是涉及到程序的内存分配策率。从内存分配的角度来分，有 `static allocation`, `automatic allocation`, `dynamic allocation`。 从内存布局的角度大致分为：数据段，代码段，栈段，堆。
 
 

@@ -1,29 +1,30 @@
-﻿# Mutex和condition variable
-
-标签（空格分隔）： [concurrency]
-
+---
+title: "Mutexs and condition variable"
+data: "2016-10-01"
+tags: ["concurrency"]
 ---
 
-在计算机科学中, 进程或线程同步是指多个并发执行流相互协作和交流,以实现在指定的执行点上按一定的顺序进行。
+我们在日常编程中使用并发机制主要解决以下两方面的问题：
 
-并发机制主要解决了两方面的问题：
-
- - Race Conditoin
+ - Race Condition<br/>
     通过提供 `Mutual exclusion` 机制， 确保多个进程或线程不会同时执行某些特定的程序段（代码段），叫做 `critial section`。当进程访问 `critial section` 时，会受到同步机制的控制。这种机制提供了对状态的互斥访问操作，可以用来解决 `Race Condition`，以实现数据的一致性。
  
- - busy-waiting
+ - busy-waiting：<br/>
     首先，忙等待发生在当进程频繁的轮询去查看是否可以进入 `critial secion`时，这会造成大量的CUP空转浪费。所以，在等待某个可能长期不会成真的条件时，使进程处于阻塞状态可能会更好一些。通过 `condition veriable` 提供的 `wait` 和 `signal`机制可以使线程在某个条件变量上等待，并可以唤醒等待在某个条件变量上的线程。
 
 在 linux 下, `POSIX` 提供了很多关于线程同步的 `Higher-level API` ，本文主关注下面两个最常用的。
 
- - mutexs(Mutual exclusion):用来实现 `critical section`, 解决 `Race condition`。
- - condition variables.
+ - mutexs(Mutual exclusion)：
+	可使得线程对某段(section)代码互斥执行，用来实现 `critical section`, 解决 `Race condition`。
+ 
+ - condition variables：
+ 	条件变量,使得一个线程可以在等待一个条件为真时挂起，并由别的线程在条件成立时在将其唤醒，有效的提供了cpu使用率。
 
 ---
-</H4>Mutex(Mutual exclusion)</H4>
+<H4>Mutex(Mutual exclusion)</H4>
 ---
 
-`Mutex variable` 被定义为`pthread_mutex_t`。 并且在使用前，必须通过 `pthread_mutex_init`初始化。
+`Mutex variable` 被定义为`pthread_mutex_t`。 并且在使用前，必须通 `pthread_mutex_init`初始化。
 
 一个 `pthread_mutex_t` 类型的变量就像一个 锁。在任意时刻，只能有一个线程 `lock(or own)` 这个 `mutex` 变量。`pthread_mutex_lock`:提供了**原子地**获取锁操作，即使多个线程并发执行`pthread_mutex_lock`，也只会有一个线程成功。其他失败的线程将 `block`。
 
@@ -76,7 +77,7 @@
 所以，我们需提供一种机制使线程在长时间等待一个条件为真时 `block`,即不会被cpu调度，并且，当确定条件满足时由另一个线程唤醒它。
 
 ---
-condition variable
+<H4>condition variable</H4>
 ---
 
 `pthread_cond_t` 表示一个condition variable，同样在使用前必须通过 `pthread_cond_init()`初始化。

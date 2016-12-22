@@ -22,19 +22,19 @@ The **mark word** is actually used for many things.
 
 **32 bit JVM**
 	
-	|------------------------------------------------------|
+	+------------------------------------------------------+
 	|			Object Header (64 bytes)	  			   |  State	   
-	|------------------------------------------------------|
+	+------------------------------------------------------+
 	|		 		Mark Word(32 bits)		  			   |
-	|------------------------------------------------------|	
+	+------------------------------------------------------+	
 	| identity_hashcode:25 | age:4 | biased_lock:1 | lock:2|   Normal  
-	|------------------------------------------------------+
+	+------------------------------------------------------+
 	| thread:23 | epoch:2 | age:4 | biased_lock:1 | lock:2 |   Bised   
-	|------------------------------------------------------+
+	+------------------------------------------------------+
 	| 		ptr_to_lock_record:30                 | lock:2 | Light Lock    
-	|------------------------------------------------------+
-	|       ptr_to_heavyweight_moniter:30		  | lock:2 |Weight Lock
-	|------------------------------------------------------+
+	+------------------------------------------------------+
+	|       ptr_to_heavyweight_moniter:30		  | lock:2 | Weight Lock
+	+------------------------------------------------------+
 
 
 1. **identity_hashcode** identity hashcode of the object which is assigned lazily.If System.identityHashCode(obj) is called, it is calculated and written into the object header. When object is locked the identity hashcode value is moved into the moniter object.

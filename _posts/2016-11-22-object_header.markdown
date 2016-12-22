@@ -22,19 +22,19 @@ The **mark word** is actually used for many things.
 
 **32 bit JVM**
 	
-	+------------------------------------------------------+
-	|			Object Header (64 bytes)	  			   |  State	   
-	+------------------------------------------------------+
-	|		 		Mark Word(32 bits)		  			   |
-	+------------------------------------------------------+	
-	| identity_hashcode:25 | age:4 | biased_lock:1 | lock:2|   Normal  
-	+------------------------------------------------------+
-	| thread:23 | epoch:2 | age:4 | biased_lock:1 | lock:2 |   Bised   
-	+------------------------------------------------------+
-	| 		ptr_to_lock_record:30                 | lock:2 | Light Lock    
-	+------------------------------------------------------+
-	|       ptr_to_heavyweight_moniter:30		  | lock:2 | Weight Lock
-	+------------------------------------------------------+
+	+------------------------------------------------------+-------------+
+	|           Object Header (64 bytes)                   |  State	     |
+	+------------------------------------------------------+-------------+
+	|               Mark Word(32 bits)                     |             |
+	+------------------------------------------------------+-------------+
+	| identity_hashcode:25 | age:4 | biased_lock:1 | lock:2|   Normal    |
+	+------------------------------------------------------+-------------+
+	| thread:23 | epoch:2 | age:4 | biased_lock:1 | lock:2 |   Bised     |
+	+------------------------------------------------------+-------------+
+	|       ptr_to_lock_record:30                 | lock:2 | Light Lock  | 
+	+------------------------------------------------------+-------------+
+	|      ptr_to_heavyweight_moniter:30          | lock:2 | Weight Lock |
+	+------------------------------------------------------+-------------+
 
 
 1. **identity_hashcode** identity hashcode of the object which is assigned lazily.If System.identityHashCode(obj) is called, it is calculated and written into the object header. When object is locked the identity hashcode value is moved into the moniter object.
@@ -55,8 +55,8 @@ When the age field reaches the value of max-tenuring-threshold, the object is pr
 8. **ptr\_to\_heavyweight_monitor** If two different threads concurrently synchronize on the same object, the lightweight lock must be inflated to a Heavyweight Monitor for the management of waiting threads. In case of heavyweight locking JVM sets a pointer to the moniter in the object's header word.
 
 
-注意:
-1. 当一个对象已经计算过 identity hashcode,它就无法进入偏向锁状态。
+注意:<br/>
+1. 当一个对象已经计算过 identity hashcode,它就无法进入偏向锁状态。<br/>
 2. 当一个对象当前正处于偏向锁状态，并且需要计算其identity hashcode时，则它的偏向锁会被撤销，并且锁会膨胀为重量锁。
 
 

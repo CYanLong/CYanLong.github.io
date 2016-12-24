@@ -1,5 +1,5 @@
 ---
-titile: "java对象头"
+title: "java对象头"
 data: "2016-12-19"
 tags : ["jvm"]
 ---

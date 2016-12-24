@@ -65,7 +65,18 @@ The **klass pointer** has word size on 32 bit architectures. On 64 bit architect
 
 The optimization is called "compressed oopes"。
 
-<H4>3.array length (opt)<H4>
+<H4>3.压缩指针</H4>
+
+
+Ordinary Object Pointers(OOPs) 是jvm用来指向对象引用的。当oops仅仅有32-bits长时，只能访问到4G范围的内存空间，也就是说，在32-bit JVM中最大堆内存限制在了4G。
+
+而在64-bit JVM中，我们能访问兆比特(terabytes)级别的内存。但是，大部分时候，我们根本没有这么大的内存。我们的内存可能仅仅不到 32G，但却因为64-bits 的对象引用导致内存使用率比32-bits高了大约1.5倍。
+
+我们现在要做的是用32-bits的oops尽可能大的表示内存范围。我们知道，java对象都是 8-bytes对齐的，也就是说所有java对象的内存地址的后 3-bits 都一定为 0.这样，我们可以利用这个特性尽可能大的表示内存范围。我们将32-bits的oops值表示为从35-bit开始的内存地址。当要使用这个值时(get_field), 左移3位(后3位补0)即可得到原始值。这时我们可以访问大概32G范围的内存。对于大部分的应用来说已经很满足了。
+
+在java7及之后的版本中，当最大堆内存小于 32GB 时，-XX:+UseCompressedOops为默认开启。
+
+<H4>3.array length (opt)</H4>
 Array has an extra 32 bit word to store array size. 
 
 

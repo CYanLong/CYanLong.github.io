@@ -1,0 +1,116 @@
+---
+title: "泛型(Generics)"
+data: "2016-12-24"
+tags: ["java"]
+---
+
+总的来说，相比于协变数组，java 的泛型被设计为不可协变提供了很好的编译时类型检查。但是由于 `类型擦除` 导致了泛型存在很严重的 `type-safe` 问题。
+
+<H4>1.类型检查(Cast check)</H4>
+
+我们都知道，在java或者说在所有的静态类型语言中，一个对象可以有两种类型：静态类型(static type)和动态类型(dynamic type).
+
+并且：
+	
+* a static type check performed by the compiler at compiler time
+* a dynamic type check performed by the virtual machine at runtime.
+
+`静态类型检查` 可以挑选出一些在编译时就可发现的无意义，必然会出错的类型转换。如 String to Date 或者 List<String\> to List<Date\>。
+
+`动态类型检查` 在程序运行时由虚拟机执行。它将抛出 `ClassCastException` 如果对象的动态类型不是目标类型(或者其子类型)。例如：运行时执行的 from Object to String 或者 Object to List<String> 的转型。我们也叫其为向下转型(downcast)，即从超类转型到子类。
+
+<H4>2.数组和泛型.</H4>
+
+* 协变性(convariant)：arrays are covariant. Generics are invariant.
+
+数组协变是说：如果 `X` 是 `Y` 的子类，则 `X[]` 也是 `Y[]` 的子类。例如：String 是 Object 的子类，则 String[] is subtype of Object[]。
+
+泛型不是协变的是说：List<X\> 不是 List<Y\> 的子类。例如: List<String\> 不是 List<Object\> 的子类。
+
+早期的 java 没有提供泛型机制。
+
+在这种情况下，数组如果不可协变将导致无法进行多态编程。例如，当编写一些诸如 `shuffle a array` 等不依赖数组实际的元素类型的函数时，一个通用的函数可以适用于所有元素类型的数组。如下：
+	
+	void shufflyArray(Object[] a);
+	
+然而，如果数组不可协变，上面的函数将只能被 Object[] 使用。
+	
+但是，当对协变数组进行写操作时可能会导致问题。所以，每次当一个值被存储进数组中时，jvm都将进行一次运行时类型检查，查看值的运行时类型是否等于数组的运行时类型。如果不等，将抛出 ArrayStoreException。
+
+这中情况是存在缺陷的。首先，它将一个错误的类型转换检查推迟到了运行时。其次，每一次的写数组都要进行额外的运行时检查将损耗性能。
+
+
+当泛型被引入后，并没有被设计为可协变的。这将保证存在于协变数组的错误的类型存储在泛型中将无法编译成功。并且，泛型提供的通配符机制 `wildcards` 仍旧可实现通用的元素类型无关的代码。
+	
+	void shuffleList(List<?> list);
+
+<H4>3.Type-Safe/type-erasure</H4>
+
+泛型机制本身提供的不可协变性和一些通配符的特性不仅解决了多态编程的问题，还将对类型的检查提前到了编译时。但是，由于 `java` 的 `类型擦除` 导致泛型存在一些 `type-safe` 问题。
+
+* Type-Safe: In Java, a porgram is considered type-safe if it compiles without errors and warning and does not raise any `unexpected` ClassCastException at runtime.
+
+`Unexpected type error` 是指在源码中我们并没有显示的转型表达式却抛出了 `ClassCastException`。
+
+	static void m1(){
+		List<Date> list = new LinkedList<Date>();
+		m2(list);
+		
+	}
+	
+	static void m2(Object obj){
+		List<String> list = (List<String>)obj; //Type safety: Unchecked cast
+		m3(list);
+	}
+	
+	static void m3(List<String> list){
+		String s = list.get(0); //ClassCastException will occur 
+		//in a place where nobody had expected it.
+	}
+	
+
+m2()方法中的转型可以通过编译和运行。而在m3()方法中抛出了运行时异常ClassCastException。问题出在m2()中实际上将一个LinkedList<Date>的对象转型给List<String>。并且这种错误的转换由于媒介Object的作用即使在运行时也没有被检查出来。 
+
+问题出在哪里呢？为什么一个实际(运行时)为LinkedList<Date>的对象可以在运行时成功转型为List<String>呢?
+
+造成这种错误的转型没有被及时checked的原因为java泛型的 `类型擦除(type erasure)` 机制。
+我们将上面这段代码的 `.class` 文件反编译后可得到如下的源程序(by Jad)：
+	
+	// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
+	// Jad home page: http://www.kpdus.com/jad.html
+	// Decompiler options: packimports(3) 
+
+    static void m1()
+    {
+        List list = new LinkedList();
+        m2(list);
+    }
+
+    static void m2(Object obj)
+    {
+        List list = (List)obj;
+    }
+	
+
+可以发现，最终的 `.class` 文件中并没有任何关于泛型的任何信息。一切又好像回到了 `JDK1.5` 之前没有提供泛型的时代。
+
+执行类型擦除的步骤包括：
+
+* Eliding type parameters.
+
+When the compiler finds the definition of a generic type or method, it removes all occurrences of the type parameters and replaces them by their leftmost bound, or type Object if no bound had been specified.
+
+
+* Eliding type arguments.
+
+When the compiler finds a paramterized type, i.e. an instantiation of a generic type, then it remove the type arguments. For instance, the types List<String>, Set<Long>, and Map<String, ?> are translated to List, Set and Map respectively.
+
+
+也就是说，List<Date\>，List<String\>， List<Integer\>  有不同的 static type,但它们都拥有相同的运行时类型, 即 List。所以，回到上面的问题，看似是 List<Date> 到 List<String> 的转型，实则为 List 到 List 的转型，所以会通过实际错误的类型检查。
+
+所以，当我们的目标类型为泛型时，可能会出现 type-safe 问题。
+
+
+
+
+
